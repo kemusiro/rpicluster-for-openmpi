@@ -1,0 +1,40 @@
+# ansible-playbook -i hosts --extra-vars @parameters.yml create_str.yml
+---
+- hosts: storage
+  vars:
+    export_dir: /share
+    export_dir_owner: mpi
+    export_dir_group: mpi
+    export_dir_mode: 0755
+    
+  remote_user: ansible
+  become: true
+  gather_facts: no
+
+  pre_tasks:
+    - name: update packaegs
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400
+
+  roles:
+    - mount-drive
+    
+  tasks:
+    - name: set hostname
+      hostname:
+        name: "{{ inventory_hostname }}"
+    - name: set timezone
+      timezone:
+        name: Asia/Tokyo
+    - name: create user
+      user:
+        name: "{{ mpi_user_name }}"
+        uid: "{{ mpi_user_id }}"
+        shell: /bin/bash
+        password: "{{ mpi_user_password | password_hash('sha512') }}"
+        generate_ssh_key: yes
+    - name: setup NFS server
+      include_role:
+        name: nfs-server
+    

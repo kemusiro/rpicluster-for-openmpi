@@ -1,0 +1,16 @@
+---
+- name: install packages
+  apt:
+    update_cache: yes
+    name:
+      - openmpi-bin
+      - libopenmpi-dev
+      - openmpi-doc
+      - python3-gmpy2
+      - python3-pip
+- name: install python packages
+  pip:
+    name:
+      - numpy
+      - mpi4py
+      - ipyparallel

@@ -1,0 +1,67 @@
+# ansible-playbook -i hosts init_management_user.yml --ask-pass --ask-become-pass
+---
+- hosts: all
+  remote_user: ubuntu
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: add all host keys to /etc/ssh/ssh_known_hosts
+      known_hosts:
+        name: "{{ hostvars[item].ansible_host }}"
+        path: /etc/ssh/ssh_known_hosts
+        key: "{{ lookup('pipe', 'ssh-keyscan -t rsa {{ item }},{{ hostvars[item].ansible_host }}') }}"
+      with_items:
+        - "{{ groups['all'] }}"
+
+    # 管理ユーザのSSH設定
+    - name: create management user
+      user:
+        name: "{{ management_user_name }}"
+        uid: "{{ management_user_id }}"
+        shell: /bin/bash
+        groups: sudo
+        password: "{{ management_user_password | password_hash('sha512') }}"
+        generate_ssh_key: yes
+        update_password: on_create
+    - name: create sudoers file
+      file:
+        path: /etc/sudoers.d/99-management-users
+        owner: root
+        group: root
+        mode: 0644
+        state: touch
+    - name: add management user to sudoers
+      lineinfile:
+        path: /etc/sudoers.d/99-management-users
+        regexp: '^{{ management_user_name }}\s'
+        line: '{{ management_user_name }} ALL=(ALL) NOPASSWD: ALL'
+    - name: create mpi user
+      user:
+        name: "{{ mpi_user_name }}"
+        uid: "{{ mpi_user_id }}"
+        shell: /bin/bash
+        password: "{{ mpi_user_password | password_hash('sha512') }}"
+        generate_ssh_key: yes
+        update_password: on_create
+    - name: add master public key to each management user
+      authorized_key:
+        user: "{{ management_user_name }}"
+        key: "{{ lookup('file', '/home/{{ management_user_name }}/.ssh/id_rsa.pub') }}"
+
+    # mpiユーザのSSH設定
+    - name: fetch public key of mpi user
+      fetch:
+        src: "~{{ mpi_user_name }}/.ssh/id_rsa.pub"
+        dest: "buffer/{{ inventory_hostname }}-id_rsa.pub"
+        flat: yes
+    - name: distribute public key of mpi user to all hosts
+      authorized_key:
+        user: "{{ mpi_user_name }}"
+        key: "{{ lookup('file', 'buffer/{{ item }}-id_rsa.pub') }}"
+      with_items:
+        - "{{ play_hosts }}"
+    - name: add master public key to each mpi user
+      authorized_key:
+        user: "{{ mpi_user_name }}"
+        key: "{{ lookup('file', '/home/{{ management_user_name }}/.ssh/id_rsa.pub') }}"

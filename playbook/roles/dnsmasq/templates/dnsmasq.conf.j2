@@ -1,0 +1,15 @@
+domain-needed
+bogus-priv
+interface={{ dnsmasq_listening_interface }}
+bind-interfaces
+domain={{ dnsmasq_domain_name }}
+dhcp-range={{ dnsmasq_listening_interface }},{{ dnsmasq_dhcp_start }},{{ dnsmasq_dhcp_end }},{{ dnsmasq_dhcp_lease }}
+{% for host in groups['allhosts'] %}
+dhcp-host={{ hostvars[host].mac }},{{ host }},{{ hostvars[host].ansible_host }},infinite
+{% endfor %}
+addn-hosts=/etc/add-hosts
+pxe-service=0,"Raspberry Pi Boot"
+enable-tftp
+tftp-root={{ dnsmasq_tftproot }}
+dhcp-boot=pxelinux.0,{{ dnsmasq_tftpboot_server }}
+

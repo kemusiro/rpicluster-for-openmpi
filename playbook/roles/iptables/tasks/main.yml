@@ -1,0 +1,20 @@
+---
+- name: install packages
+  apt:
+    name:
+      - iptables-persistent
+- name: set forwarding on
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+    state: present
+    reload: yes
+- name: set routing
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: "{{ out_interface }}"
+    jump: MASQUERADE
+- name: save iptable
+  command: netfilter-persistent save

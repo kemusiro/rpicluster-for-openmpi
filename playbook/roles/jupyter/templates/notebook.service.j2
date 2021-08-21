@@ -1,0 +1,13 @@
+[Unit]
+Description = Jupyter Notebook
+[Service]
+Type=simple
+PIDFile=/run/jupyter-notebook.pid
+Environment=IPYTHONDIR=/share/.ipyparallel
+ExecStart={{ jupyter_path }}/jupyter notebook {{ jupyter_option }}
+WorkingDirectory={{ jupyter_work }}
+User={{ jupyter_user }}
+Group={{ jupyter_group }}
+Restart=always
+[Install]
+WantedBy = multi-user.target

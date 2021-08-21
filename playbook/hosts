@@ -1,0 +1,35 @@
+[all:vars]
+management_user_name=ansible
+management_user_id=1001
+management_user_password=password
+mpi_user_name=mpi
+mpi_group_name=mpi
+mpi_user_id=2000
+mpi_user_password=password
+domain_name=mpi.test
+
+[compute]
+node10 ansible_host=192.168.2.10 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+node11 ansible_host=192.168.2.11 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+node12 ansible_host=192.168.2.12 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+node13 ansible_host=192.168.2.13 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+node14 ansible_host=192.168.2.14 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+node15 ansible_host=192.168.2.15 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+node16 ansible_host=192.168.2.16 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+node17 ansible_host=192.168.2.17 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+node18 ansible_host=192.168.2.18 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+node19 ansible_host=192.168.2.19 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+node20 ansible_host=192.168.2.20 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+node21 ansible_host=192.168.2.21 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+
+[management]
+mng ansible_host=192.168.2.1 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+
+[storage]
+str ansible_host=192.168.2.2 serial=xxxxxxxx mac=xx:xx:xx:xx:xx:xx
+
+[allhosts:children]
+compute
+management
+storage
+

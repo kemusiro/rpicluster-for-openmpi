@@ -1,0 +1,8 @@
+---
+dnsmasq_listening_interface: eth0
+dnsmasq_domain_name: mpi.test
+dnsmasq_dhcp_start: 192.168.2.100
+dnsmasq_dhcp_end: 192.168.2.119
+dnsmasq_dhcp_lease: 24h
+dnsmasq_tftproot: /share/tftpboot
+dnsmasq_tftpboot_server: 192.168.2.1

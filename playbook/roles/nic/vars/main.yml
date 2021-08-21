@@ -1,0 +1,9 @@
+---
+common_hostname: mng
+ethernet_address: 192.168.2.1/24
+wifi_address: 192.168.1.19/24
+gateway: 192.168.1.1
+nameservers: 192.168.1.1
+local_nameservers: 192.168.2.1
+local_domain: mpi.test
+

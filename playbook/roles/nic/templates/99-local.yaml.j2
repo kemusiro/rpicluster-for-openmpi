@@ -1,0 +1,19 @@
+network:
+  version: 2
+  ethernets:
+    eth0:
+      addresses: [{{ ethernet_address  }}]
+      nameservers:
+        addresses: [{{ local_nameservers }}]
+        search: [{{ local_domain }}]
+  wifis:
+    wlan0:
+      addresses: [{{ wifi_address }}]
+      access-points:
+        {{ wifi_ssid }}:
+          password: {{ wifi_password }}
+      gateway4: {{ gateway }}
+      nameservers:
+        addresses: [{{ nameservers }}]
+        search: []
+

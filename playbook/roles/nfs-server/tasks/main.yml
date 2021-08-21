@@ -1,0 +1,14 @@
+---
+- name:  install packages
+  apt:
+    name:
+      - nfs-kernel-server
+- name: export share directory
+  lineinfile:
+    path: /etc/exports
+    state: present
+    line: "{{ item }}"
+  with_items:
+    - '{{ export_dir }} {{ authorized_hosts }}({{ export_option }})'
+  notify:
+    re-export share directory

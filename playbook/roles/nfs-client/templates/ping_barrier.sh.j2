@@ -1,0 +1,9 @@
+#!/bin/bash    
+printf "%s" "waiting for FileServer ..."
+while ! ping -c 1 -n -w 1 {{ nfs_server }} &> /dev/null
+do
+	    printf "%c" "."
+	    sleep 1
+    done
+    printf "\n%s\n"  "Server is back online"
+

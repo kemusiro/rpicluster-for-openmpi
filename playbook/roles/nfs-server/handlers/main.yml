@@ -1,0 +1,4 @@
+---
+- name: re-export share directory
+  command: exportfs -ra
+

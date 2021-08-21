@@ -1,0 +1,4 @@
+---
+netboot_pxeserver: 192.168.2.1
+netboot_tftpserver: 192.168.2.1
+

@@ -1,0 +1,7 @@
+---
+jupyter_path: /usr/local/bin
+jupyter_option: ''
+jupyter_work: /share/jupyter
+jupyter_user: mpi
+jupyter_group: mpi
+

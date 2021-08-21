@@ -1,0 +1,6 @@
+---
+mount_point: /share
+nfs_server: 192.168.2.2
+export_point: /share
+mount_option: rw,sync,hard,intr,x-systemd.requires=ping_barrier.service,x-systemd.after=ping_barrier.service
+

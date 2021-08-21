@@ -1,0 +1,48 @@
+# mngノードで実行する。
+# ansible-playbook -i hosts -e @parameters.yml setup_mng.yml
+---
+- hosts: mng
+  vars:
+    export_dir: /share
+    
+  connection: local 
+  become: yes
+  gather_facts: false
+  
+  pre_tasks:
+    - name: update packaegs
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400
+        
+  roles:
+    - hostname
+    - mount-drive
+    - nic
+    - iptables
+    - dnsmasq
+    - netboot
+    - mosquitto
+
+- hosts: mng
+  vars:
+    export_dir: /share
+
+  connection: local
+  become: yes
+  gather_facts: false
+  
+  tasks:
+    - name: set timezone
+      timezone:
+        name: Asia/Tokyo
+    - name: create user
+      user:
+        name: "{{ mpi_user_name }}"
+        uid: "{{ mpi_user_id }}"
+        shell: /bin/bash
+        password: "{{ mpi_user_password | password_hash('sha512') }}"
+        generate_ssh_key: yes
+    - name: setup NFS server
+      include_role:
+        name: nfs-server

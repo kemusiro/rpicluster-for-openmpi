@@ -1,0 +1,14 @@
+---
+- name: create mount point
+  file:
+    path: "{{ export_dir }}"
+    owner: "{{ export_dir_owner }}"
+    group: "{{ export_dir_group }}"
+    mode: "{{ export_dir_mode }}"
+    state: directory
+- name: mount SSD drive
+  mount:
+    path: "{{ export_dir }}"
+    src: "{{ mount_device }}"
+    fstype: "{{ mount_fstype }}"
+    state: mounted

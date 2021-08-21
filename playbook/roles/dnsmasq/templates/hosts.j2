@@ -1,0 +1,4 @@
+127.0.0.1 localhost {{ common_hostname }} {{ inventory_hostname }}.{{ domain_name }}
+{% for host in groups['allhosts'] %}
+{{ hostvars[host].ansible_host }} {{ host }} {{ host }}.{{ domain_name }}
+{% endfor %}

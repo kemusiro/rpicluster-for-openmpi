@@ -1,0 +1,33 @@
+---
+- name: install package
+  apt:
+    update_cache: yes
+    name:
+      nfs-common
+- name: create a mount point
+  file:
+    path: "{{ mount_point }}"
+    owner: mpi
+    group: mpi
+    state: directory
+- name: register ping barrier service
+  copy:
+    src: ping_barrier.service
+    dest: /etc/systemd/system
+    owner: root
+    group: root
+    mode: 0644
+- name: copy ping barrier script
+  template:
+    src: ping_barrier.sh.j2
+    dest: /opt/ping_barrier.sh
+    owner: root
+    group: root
+    mode: 0755
+- name: mount an NFS volume
+  mount:
+    src: "{{ nfs_server }}:{{ export_point }}"
+    path: "{{ mount_point }}"
+    opts: "{{ mount_option }}"
+    state: mounted
+    fstype: nfs

@@ -1,0 +1,62 @@
+---
+- name: create mount point of SSD drive
+  file:
+    path: /share
+    state: directory
+- name: mount ssd
+  mount:
+    path: /share
+    src: /dev/sda
+    fstype: ext4
+    state: mounted
+- name: create each tftpboot directories
+  file:
+    path: /share/tftpboot/images/{{ hostvars[item].serial }}
+    state: directory
+  with_items:
+    - "{{ groups['allhosts'] }}"
+- name: synchronize boot image
+  synchronize:
+    src: /share/images/boot/
+    dest: /share/tftpboot/images/{{ hostvars[item].serial }}
+  with_items:
+    - "{{ groups['allhosts'] }}"
+- name: setup cmdline.txt
+  template:
+    src: cmdline.txt.j2
+    dest: /share/tftpboot/images/{{ hostvars[item].serial }}/cmdline.txt
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - "{{ groups['allhosts'] }}"
+- name: create each pxeboot directories
+  file:
+    path: /share/pxeboot/{{ hostvars[item].serial }}
+    state: directory
+  with_items:
+    - "{{ groups['allhosts'] }}"
+- name: synchronize root directory
+  synchronize:
+    src: /share/images/rootfs/
+    dest: /share/pxeboot/{{ hostvars[item].serial }}
+  with_items:
+    - "{{ groups['allhosts'] }}"
+- name: setup fstab
+  template:
+    src: fstab.j2
+    dest: /share/pxeboot/{{ hostvars[item].serial }}/etc/fstab
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - "{{ groups['allhosts'] }}"
+- name: create backup store
+  file:
+    path: /share/backup
+    state: directory
+- name: create os image store
+  file:
+    path: /share/images/os
+    state: directory
+  

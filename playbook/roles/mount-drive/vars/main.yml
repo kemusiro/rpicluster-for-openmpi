@@ -1,0 +1,4 @@
+---
+mount_device: /dev/sda
+mount_fstype: ext4
+

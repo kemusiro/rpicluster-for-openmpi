@@ -1,0 +1,11 @@
+[Unit]    
+Description=Ping until Success
+
+[Service]
+Type=oneshot
+ExecStart=/opt/ping_barrier.sh
+StandardOutput=journal
+
+[Install]
+WantedBy=nfs-client.target
+

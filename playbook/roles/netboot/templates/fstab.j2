@@ -1,0 +1,4 @@
+proc            /proc           proc    defaults          0       0
+{{ netboot_pxeserver }}:/share/tftpboot/images/{{ hostvars[item].serial }} /boot nfs defaults,vers=4.1,proto=tcp 0 0
+{{ netboot_pxeserver }}:/share/images/os /os nfs defaults,vers=4.1,proto=tcp 0 0
+{{ netboot_pxeserver }}:/share/backup /backup nfs defaults,vers=4.1,proto=tcp 0 0

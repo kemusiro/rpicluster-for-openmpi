@@ -1,0 +1,14 @@
+---
+- hosts: node17
+  connection: local
+  become: true
+  gather_facts: no
+
+  tasks:
+    - name: unlink network boot image
+      file:
+        path: /share/tftpboot/{{ serial }}
+        state: absent
+    - name: clear local ssh key store
+      command: ssh-keygen -f ~/.ssh/known_hosts -R {{ inventory_hostname }}
+      failed_when: no

@@ -1,0 +1,37 @@
+---
+- name: install Jupyter package
+  pip:
+    name:
+      - jupyter
+      - ipyparallel
+- name: copy jupyter config file
+  copy:
+    src: jupyter_notebook_config.py
+    dest: /home/{{ mpi_user_name }}/.jupyter/jupyter_notebook_config.py
+    owner: "{{ mpi_user_name }}"
+    group: "{{ mpi_group_name }}"
+- name: set jupyter as service
+  template:
+    src: notebook.service.j2
+    dest: /etc/systemd/system/notebook.service
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify:
+    restart jupyter
+- name: copy ipyparallel config files
+  synchronize:
+    src: .ipyparallel
+    dest: /share
+  tags: temp
+- name: recursively update owner for .ipyparallel directory
+  file:
+    path: /share/.ipyparallel
+    state: directory
+    recurse: yes
+    owner: "{{ mpi_user_name }}"
+    group: "{{ mpi_group_name }}"
+  tags: temp
+  
+    

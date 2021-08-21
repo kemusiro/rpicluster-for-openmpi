@@ -1,0 +1,5 @@
+---
+- name: network changed
+  shell: /usr/sbin/netplan apply
+  become: true
+

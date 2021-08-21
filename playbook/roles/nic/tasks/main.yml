@@ -1,0 +1,11 @@
+---
+- name: set network interfaces
+  template:
+    src: 99-local.yaml.j2
+    dest: /etc/netplan/99-local.yaml
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify:
+    network changed

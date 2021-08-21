@@ -1,0 +1,24 @@
+---
+- name: install dnsmasq
+  apt:
+    name:
+      - dnsmasq
+  become: true
+- name: set hosts
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+- name: setup dnsmasq
+  template:
+    src: dnsmasq.conf.j2
+    dest: /etc/dnsmasq.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify:
+    restart dnsmasq
